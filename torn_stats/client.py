@@ -1,6 +1,5 @@
 from enum import IntEnum
 import requests
-from .app import app
 
 
 class LogTypes(IntEnum):
@@ -12,12 +11,15 @@ class LogTypes(IntEnum):
 class TornClient(object):
     url = "https://api.torn.com"
 
+    def __init__(self, api_key):
+        self.api_key = api_key
+
     def execute(self, endpoint, selection, **kwargs):
         url = f"{self.url}/{endpoint}/"
 
         query_params = {
             "selections": selection,
-            "key": app.config["TORN_API_KEY"]
+            "key": self.api_key
         }
         query_params.update(**kwargs)
 

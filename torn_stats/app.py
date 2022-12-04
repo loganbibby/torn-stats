@@ -6,9 +6,6 @@ app = Flask(__name__)
 
 app.config.from_object("torn_stats.config")
 
-@app.before_request
-def init_request():
-    g.cache = Cache(app)
-
+cache = Cache(app)
 
 from . import views
