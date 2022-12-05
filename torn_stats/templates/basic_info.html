@@ -1,41 +1,58 @@
 {% extends "framework.html" %}
 
 {% block content %}
+    <div class="row mb-5">
+        <div class="col-12 text-center small">
+            Stats from {{ start_date.strftime('%B %d, %Y') }} to today
+        </div>
+    </div>
     <div class="row">
         {% for profile in profiles -%}
-        <div class="col-12 col-lg-6 col-xl-4 mb-2 mb-lg-0">
+        <div class="col-12 col-lg-6 col-xl-4 mb-4 mb-lg-0">
             <div class="card shadow">
                 <div class="card-header">
                     <h4 class="card-title my-3">{{ profile["player"]["name"] }}</h4>
                 </div>
                 <div class="card-body">
-                    {% set left_col = 8 %}
+                    {% set left_col = 7 %}
                     {% set right_col = 4 %}
                     <div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-capsules"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Xanax Taken</div>
                         <div class="col-{{ right_col }} text-end">{{ profile["xanax"] }}</div>
                     </div>
                     <div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-people-robbery"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Crimes Committed</div>
                         <div class="col-{{ right_col }} text-end">{{ profile["crimes"] }}</div>
                     </div>
                     <div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-hand-middle-finger"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Missions Completed</div>
                         <div class="col-{{ right_col }} text-end">{{ profile["missions"] }}</div>
                     </div>
                     <div class="row mb-2 border-bottom pb-2">
-                        <div class="col-{{ left_col }} fw-bold">Travel Time</div>
-                        <div class="col-{{ right_col }} text-end">{{ "{:,}".format(profile["travel"]) }}</div>
+                        <div class="col-1"><i class="fa-regular fa-plane-tail"></i></div>
+                        <div class="col-{{ left_col }} fw-bold">Travel</div>
+                        <div class="col-{{ right_col }} text-end">
+                            <div class="row mb-0">
+                                <div class="col-12">{{ "{:,}".format(profile["travel"]) }} mins</div>
+                                <div class="col-12">{{ profile["travel_count"] }} trips</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2 border-bottom pb-2">
-                        <div class="col-{{ left_col }} fw-bold">Money Received</div>
-                        <div class="col-{{ right_col }} text-end">${{ "{:,}".format(profile["money_in"]) }}</div>
+                        <div class="col-1"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                        <div class="col-{{ left_col }} fw-bold">Money Movement</div>
+                        <div class="col-{{ right_col }} text-end">
+                            <div class="row mb-0">
+                                <div class="col-12 text-success">${{ "{:,}".format(profile["money_in"]) }}</div>
+                                <div class="col-12 text-danger">${{ "{:,}".format(profile["money_out"]) }}</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2 border-bottom pb-2">
-                        <div class="col-{{ left_col }} fw-bold">Money Spent</div>
-                        <div class="col-{{ right_col }} text-end">${{ "{:,}".format(profile["money_out"]) }}</div>
-                    </div>
-                    <div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-vault"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Vault</div>
                         <div class="col-{{ right_col }} text-end">${{ "{:,}".format(profile["vault"]) }}</div>
                     </div>

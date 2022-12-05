@@ -4,6 +4,7 @@ import requests
 
 class LogTypes(IntEnum):
     XANAX = 2290
+    XANAX_OD = 2291
     MISSION = 7815
     CRIME = 5725
     TRAVEL = 6000
