@@ -47,7 +47,8 @@
                         <div class="col-{{ right_col }} text-end">
                             <div class="row mb-0">
                                 <div class="col-12 text-success">${{ "{:,}".format(profile["money_in"]) }}</div>
-                                <div class="col-12 text-danger">${{ "{:,}".format(profile["money_out"]) }}</div>
+                                <div class="col-12 text-danger">-${{ "{:,}".format(profile["money_out"]) }}</div>
+                                <div class="col-12 border-top fw-bold">${{ "{:,}".format(profile["money_in"] - profile["money_out"]) }}</div>
                             </div>
                         </div>
                     </div>

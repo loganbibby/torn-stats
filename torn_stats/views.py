@@ -36,6 +36,11 @@ def display_info():
 
             date += timedelta(days=1)
 
+        vault_logs = client.get_logs(
+            [LogTypes.VAULT_DEPOSIT, LogTypes.VAULT_WITHDRAWAL],
+            start_date=datetime(2022, 11, 21)
+        )
+
         print(f"Log count: {len(logs)}")
 
         def get_logs(log_types):
@@ -54,8 +59,8 @@ def display_info():
             "money_in": client.get_money_received(start_date=start_date),
             "money_out": client.get_money_spent(start_date=start_date),
             "vault": sum([
-                sum([l["data"]["deposited"] for l in get_logs(LogTypes.VAULT_DEPOSIT.value)]),
-                sum([l["data"]["withdrawn"] for l in get_logs(LogTypes.VAULT_WITHDRAWAL.value)]) * -1,
+                sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
+                sum([l["data"]["withdrawn"] for l in vault_logs if "withdrawn" in l["data"] and l["data"]["property"] == 13]) * -1,
             ]),
         })
 
