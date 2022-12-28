@@ -28,7 +28,7 @@ def display_info():
 
             logs += client.get_logs([
                     LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT,
-                    LogTypes.XANAX, LogTypes.CRIME, LogTypes.MISSION, LogTypes.UPKEEP
+                    LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP, LogTypes.CRIME, #LogTypes.CRIMES,
                 ],
                 start_date=date,
                 end_date=date.replace(hour=23, minute=59, second=59)
@@ -52,7 +52,8 @@ def display_info():
         profiles.append({
             "player": client.get_basic_info(),
             "xanax": len(get_logs([LogTypes.XANAX.value, LogTypes.XANAX_OD.value])),
-            "crimes": len(get_logs(LogTypes.CRIME.value)),
+            "crimes": len([t ["data"]["crime"] for t in get_logs(LogTypes.CRIME.value)]),#(LogCategories.CRIME.value)]),
+            #"crimes": len(["data"]["crime"]client.get_crime(start_date=start_date)) / 60,
             "missions": len(get_logs(LogTypes.MISSION.value)),
             "travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),
             "travel_count": len(get_logs(LogTypes.TRAVEL.value)),

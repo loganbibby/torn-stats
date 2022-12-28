@@ -6,7 +6,6 @@ class LogTypes(IntEnum):
     XANAX = 2290
     XANAX_OD = 2291
     MISSION = 7815
-    CRIME = 5725
     TRAVEL = 6000
     GYM_DEFENSE = 5301
     GYM_STRENGTH = 5300
@@ -21,12 +20,16 @@ class LogTypes(IntEnum):
     COMPANY_PAY = 6221
     COMPANY_TRAIN = 6264
     MARKET_SELL = 1104
+    BAZAAR_SELL = 1221
     UPKEEP = 5920
+    CRIME = 5725
+    CRIMES = 5720
 
 
 class LogCategories(IntEnum):
     MONEY_INCOMING = 17
     MONEY_OUTGOING = 14
+    CRIME = 136
 
 
 class TornClient(object):
@@ -102,7 +105,7 @@ class TornClient(object):
         money = 0
 
         for log in logs:
-            for key in ["money", "money_mugged", "pay", "cost"]:
+            for key in ["money", "money_mugged", "pay", "cost","total_cost"]:
                 if key not in log["data"]:
                     continue
                 money += log["data"][key]
@@ -166,3 +169,19 @@ class TornClient(object):
                 money += log["data"][key]
 
         return money
+        
+    def get_crime(self, **kwargs):
+        logs = self.get_logs(
+            log_category=LogCategories.CRIME,
+            **kwargs
+        )
+
+        crime = 0
+
+        for log in logs:
+            for key in ["crime"]:
+                if key not in log["data"]:
+                    continue
+                crime += log["data"][key]
+
+        return crime
