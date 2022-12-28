@@ -52,7 +52,8 @@ def display_info():
         profiles.append({
             "player": client.get_basic_info(),
             "xanax": len(get_logs([LogTypes.XANAX.value, LogTypes.XANAX_OD.value])),
-            "crimes": len([t ["data"]["crime"] for t in get_logs(LogTypes.CRIME.value)]),#(LogCategories.CRIME.value)]),
+            #"crimes": len([t ["data"]["crime"] for t in get_logs(LogTypes.CRIME.value)]),#(LogCategories.CRIME.value)]),
+            "crimes": len(get_logs(LogTypes.CRIME.value)),
             #"crimes": len(["data"]["crime"]client.get_crime(start_date=start_date)) / 60,
             "missions": len(get_logs(LogTypes.MISSION.value)),
             "travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),

@@ -6,33 +6,33 @@ from .app import cache
 
 
 class LogTypes(IntEnum):
-    XANAX = 2290
-    XANAX_OD = 2291
-    MISSION = 7815
-    TRAVEL = 6000
-    GYM_DEFENSE = 5301
-    GYM_STRENGTH = 5300
-    GYM_DEXTERITY = 5303
-    GYM_SPEED = 5302
-    ATTACK_MUG = 8155
-    ATTACK_HOSPITALIZE = 8160
-    ATTACK_LEAVE = 8150
-    VAULT_DEPOSIT = 5850
-    VAULT_WITHDRAWAL = 5851
-    TRAVEL_BUY = 4201
-    COMPANY_PAY = 6221
-    COMPANY_TRAIN = 6264
-    MARKET_SELL = 1104
-    BAZAAR_SELL = 1221
-    UPKEEP = 5920
-    CRIME = 5725
-    CRIMES = 5720
+	XANAX = 2290
+	XANAX_OD = 2291
+	MISSION = 7815
+	TRAVEL = 6000
+	GYM_DEFENSE = 5301
+	GYM_STRENGTH = 5300
+	GYM_DEXTERITY = 5303
+	GYM_SPEED = 5302
+	ATTACK_MUG = 8155
+	ATTACK_HOSPITALIZE = 8160
+	ATTACK_LEAVE = 8150
+	VAULT_DEPOSIT = 5850
+	VAULT_WITHDRAWAL = 5851
+	TRAVEL_BUY = 4201
+	COMPANY_PAY = 6221
+	COMPANY_TRAIN = 6264
+	MARKET_SELL = 1104
+	BAZAAR_SELL = 1221
+	UPKEEP = 5920
+	CRIME = 5725
+	CRIMES = 5720
 
 
 class LogCategories(IntEnum):
-    MONEY_INCOMING = 17
-    MONEY_OUTGOING = 14
-    CRIME = 136
+	MONEY_INCOMING = 17
+	MONEY_OUTGOING = 14
+	CRIME = 136
 
 
 class TornClient(object):
@@ -169,7 +169,7 @@ class TornClient(object):
 
 	def get_vault_net(self, **kwargs):
 		return self.get_vault_deposits(**kwargs) - self.get_vault_withdrawals(**kwargs)
-  
+
    # def get_upkeep(self, **kwargs):
 	#    logs = self.get_logs(
 	 #       LogTypes.upkeep,
@@ -191,20 +191,20 @@ class TornClient(object):
 					continue
 				money += log["data"][key]
 
-        return money
-        
-    def get_crime(self, **kwargs):
-        logs = self.get_logs(
-            log_category=LogCategories.CRIME,
-            **kwargs
-        )
+		return money
+		
+	def get_crime(self, **kwargs):
+		logs = self.get_logs(
+			log_category=LogCategories.CRIME,
+			**kwargs
+		)
 
-        crime = 0
+		crime = 0
 
-        for log in logs:
-            for key in ["crime"]:
-                if key not in log["data"]:
-                    continue
-                crime += log["data"][key]
+		for log in logs:
+			for key in ["crime"]:
+				if key not in log["data"]:
+					continue
+				crime += log["data"][key]
 
-        return crime
+		return crime
