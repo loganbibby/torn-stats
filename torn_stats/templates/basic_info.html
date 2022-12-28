@@ -40,7 +40,7 @@
                                 <div class="col-12">{{ profile["travel_count"] }} trips</div>
                             </div>
                         </div>
-                    </div>
+					</div>	
                     <div class="row mb-2 border-bottom pb-2">
                         <div class="col-1"><i class="fa-solid fa-money-bill-transfer"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Money Movement</div>
@@ -50,8 +50,13 @@
                                 <div class="col-12 text-danger">-${{ "{:,}".format(profile["money_out"]) }}</div>
                                 <div class="col-12 border-top fw-bold">${{ "{:,}".format(profile["money_in"] - profile["money_out"]) }}</div>
                             </div>
-                        </div>
-                    </div>
+						</div>
+					</div>	
+                    <div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-money-check-dollar"></i></div>
+                        <div class="col-{{ left_col }} fw-bold">Upkeep Paid</div>
+                        <div class="col-{{ right_col }} text-end">${{ "{:,}".format(profile["upkeep"]) }}</div>
+					</div>
                     <div class="row mb-2 border-bottom pb-2">
                         <div class="col-1"><i class="fa-solid fa-vault"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Vault</div>
@@ -59,7 +64,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+		</div>
         {%- endfor %}
-    </div>
+		</div>
 {% endblock %}

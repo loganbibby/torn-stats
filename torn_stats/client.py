@@ -21,6 +21,7 @@ class LogTypes(IntEnum):
     COMPANY_PAY = 6221
     COMPANY_TRAIN = 6264
     MARKET_SELL = 1104
+    UPKEEP = 5920
 
 
 class LogCategories(IntEnum):
@@ -142,3 +143,26 @@ class TornClient(object):
 
     def get_vault_net(self, **kwargs):
         return self.get_vault_deposits(**kwargs) - self.get_vault_withdrawals(**kwargs)
+  
+   # def get_upkeep(self, **kwargs):
+    #    logs = self.get_logs(
+     #       LogTypes.upkeep,
+      #      **kwargs
+       # return upkeep_paid(**kwargs)
+       # )
+        
+    def get_upkeep(self, **kwargs):
+        logs = self.get_logs(
+            log_category=LogCategories.MONEY_OUTGOING,
+            **kwargs
+        )
+
+        money = 0
+
+        for log in logs:
+            for key in ["upkeep_paid"]:
+                if key not in log["data"]:
+                    continue
+                money += log["data"][key]
+
+        return money

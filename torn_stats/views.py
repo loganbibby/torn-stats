@@ -28,7 +28,7 @@ def display_info():
 
             logs += client.get_logs([
                     LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT,
-                    LogTypes.XANAX, LogTypes.CRIME, LogTypes.MISSION
+                    LogTypes.XANAX, LogTypes.CRIME, LogTypes.MISSION, LogTypes.UPKEEP
                 ],
                 start_date=date,
                 end_date=date.replace(hour=23, minute=59, second=59)
@@ -58,6 +58,7 @@ def display_info():
             "travel_count": len(get_logs(LogTypes.TRAVEL.value)),
             "money_in": client.get_money_received(start_date=start_date),
             "money_out": client.get_money_spent(start_date=start_date),
+            "upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
             "vault": sum([
                 sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
                 sum([l["data"]["withdrawn"] for l in vault_logs if "withdrawn" in l["data"] and l["data"]["property"] == 13]) * -1,
