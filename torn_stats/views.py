@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from time import time
 from flask import render_template, g
-from .client import TornClient, LogTypes
+from .client import TornClient, LogTypes, LogCategories
 from .app import app, cache
 
 
@@ -26,15 +26,19 @@ def display_info():
             if date > end_date:
                  break
 
-            logs += client.get_logs([
-                    LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT,
-                    LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP, LogTypes.CRIME, #LogTypes.CRIMES,
+            logs += client.get_logs(log_type=[LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP, LogTypes.CRIME_SHOPLIFT],
+            start_date=date,
+            end_date=date.replace(hour=23, minute=59, second=59))
+
+            logs += client.get_logs(log_category=[
+                    #LogCategories.CRIME,
                 ],
                 start_date=date,
                 end_date=date.replace(hour=23, minute=59, second=59)
             )
 
             date += timedelta(days=1)
+            
 
         vault_logs = client.get_logs(
             [LogTypes.VAULT_DEPOSIT, LogTypes.VAULT_WITHDRAWAL],
@@ -52,8 +56,8 @@ def display_info():
         profiles.append({
             "player": client.get_basic_info(),
             "xanax": len(get_logs([LogTypes.XANAX.value, LogTypes.XANAX_OD.value])),
-            #"crimes": len([t ["data"]["crime"] for t in get_logs(LogTypes.CRIME.value)]),#(LogCategories.CRIME.value)]),
-            "crimes": len(get_logs(LogTypes.CRIME.value)),
+            #"crimes": len([t["data"]["crime"] for t in get_logs(LogCategories.CRIME.value)]),
+            #"crimes": len(get_logs(log_categories=crime)),
             #"crimes": len(["data"]["crime"]client.get_crime(start_date=start_date)) / 60,
             "missions": len(get_logs(LogTypes.MISSION.value)),
             "travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),

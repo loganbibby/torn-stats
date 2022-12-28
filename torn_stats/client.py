@@ -25,7 +25,7 @@ class LogTypes(IntEnum):
 	MARKET_SELL = 1104
 	BAZAAR_SELL = 1221
 	UPKEEP = 5920
-	CRIME = 5725
+	CRIME_SHOPLIFT = 5725
 	CRIMES = 5720
 
 
@@ -61,6 +61,9 @@ class TornClient(object):
 		if not payload or not self.use_cache:
 			r = requests.get(url, params=query_params)
 			payload = r.json()
+			print(r.status_code)
+			print(r.url)
+			#print(payload)
 			
 			if "to" in query_params and query_params["to"] > int(datetime.now().replace(hour=0, minute=0, second=0).timestamp()):
 				timeout = 60 * 60
@@ -128,7 +131,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "pay", "cost","total_cost"]:
+			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given"]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
@@ -170,7 +173,7 @@ class TornClient(object):
 	def get_vault_net(self, **kwargs):
 		return self.get_vault_deposits(**kwargs) - self.get_vault_withdrawals(**kwargs)
 
-   # def get_upkeep(self, **kwargs):
+	# def get_upkeep(self, **kwargs):
 	#    logs = self.get_logs(
 	 #       LogTypes.upkeep,
 	  #      **kwargs
