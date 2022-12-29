@@ -7,72 +7,78 @@ from .app import app, cache
 
 
 @app.route("/")
-@cache.cached(timeout=30)
 def display_info():
-    #start_date = datetime(2022, 11, 21)
-    start_date = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0)
-    end_date = datetime.utcnow().replace(hour=23, minute=59, second=59)
+	start_date = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0)
+	end_date = datetime.utcnow().replace(hour=23, minute=59, second=59)
 
-    profiles = []
+	profiles = []
 
-    for api_key in app.config["TORN_API_KEYS"]:
-        client = TornClient(api_key)
+	for api_key in app.config["TORN_API_KEYS"]:
+		client = TornClient(api_key)
 
-        logs = []
+		logs = []
 
-        date = start_date
+		date = start_date
 
-        while True:
-            if date > end_date:
-                 break
+		while True:
+			if date > end_date:
+				 break
+			
+			end_date = date.replace(hour=23, minute=59, second=59)
+			
+			logs += client.get_logs(
+				log_type=[
+					LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, 
+					LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP
+				] + LogTypes.crime_success(),
+				start_date=date,
+				end_date=end_date
+			)
+			
+			# Advance day
+			date += timedelta(days=1)
+			
 
-            logs += client.get_logs(log_type=[LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP, LogTypes.CRIME_SHOPLIFT],
-            start_date=date,
-            end_date=date.replace(hour=23, minute=59, second=59))
+		vault_logs = client.get_logs(
+			[LogTypes.VAULT_DEPOSIT, LogTypes.VAULT_WITHDRAWAL],
+			start_date=datetime(2022, 11, 21)
+		)
+		
+		def get_logs(log_types):
+			if not isinstance(log_types, list):
+				log_types = [log_types]
 
-            logs += client.get_logs(log_category=[
-                    #LogCategories.CRIME,
-                ],
-                start_date=date,
-                end_date=date.replace(hour=23, minute=59, second=59)
-            )
+			return [log for log in logs if log["log"] in log_types]
+		
+		def get_logs_by_detail(**kwargs):
+			log_subset = []
+			
+			for key, value in kwargs.items():
+				if not isinstance(value, list):
+					value = [value]
+				
+				log_subset += [log for log in logs if log[key].lower() in value]
+			
+			return log_subset
+		
+		profiles.append({
+			"player": client.get_basic_info(),
+			"xanax": len(get_logs([LogTypes.XANAX.value, LogTypes.XANAX_OD.value])),
+			"crimes": len(get_logs([log_type.value for log_type in LogTypes.crime_success()])),
+			"missions": len(get_logs(LogTypes.MISSION.value)),
+			"travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),
+			"travel_count": len(get_logs(LogTypes.TRAVEL.value)),
+			"money_in": client.get_money_received(start_date=start_date),
+			"money_out": client.get_money_spent(start_date=start_date),
+			"upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
+			"vault": sum([
+				sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
+				sum([l["data"]["withdrawn"] for l in vault_logs if "withdrawn" in l["data"] and l["data"]["property"] == 13]) * -1,
+			]),
+		})
 
-            date += timedelta(days=1)
-            
-
-        vault_logs = client.get_logs(
-            [LogTypes.VAULT_DEPOSIT, LogTypes.VAULT_WITHDRAWAL],
-            start_date=datetime(2022, 11, 21)
-        )
-
-        print(f"Log count: {len(logs)}")
-
-        def get_logs(log_types):
-            if not isinstance(log_types, list):
-                log_types = [log_types]
-
-            return [log for log in logs if log["log"] in log_types]
-
-        profiles.append({
-            "player": client.get_basic_info(),
-            "xanax": len(get_logs([LogTypes.XANAX.value, LogTypes.XANAX_OD.value])),
-            #"crimes": len([t["data"]["crime"] for t in get_logs(LogCategories.CRIME.value)]),
-            #"crimes": len(get_logs(log_categories=crime)),
-            #"crimes": len(["data"]["crime"]client.get_crime(start_date=start_date)) / 60,
-            "missions": len(get_logs(LogTypes.MISSION.value)),
-            "travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),
-            "travel_count": len(get_logs(LogTypes.TRAVEL.value)),
-            "money_in": client.get_money_received(start_date=start_date),
-            "money_out": client.get_money_spent(start_date=start_date),
-            "upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
-            "vault": sum([
-                sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
-                sum([l["data"]["withdrawn"] for l in vault_logs if "withdrawn" in l["data"] and l["data"]["property"] == 13]) * -1,
-            ]),
-        })
-
-    return render_template(
-        "basic_info.html",
-        start_date=start_date,
-        profiles=profiles
-    )
+	return render_template(
+		"basic_info.html",
+		start_date=start_date,
+		profiles=profiles
+	)

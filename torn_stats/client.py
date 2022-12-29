@@ -25,14 +25,23 @@ class LogTypes(IntEnum):
 	MARKET_SELL = 1104
 	BAZAAR_SELL = 1221
 	UPKEEP = 5920
-	CRIME_SHOPLIFT = 5725
-	CRIMES = 5720
+	CRIME_SUCCESS_POINT = 5730
+	CRIME_SUCCESS_MONEY = 5720
+	CRIME_SUCCESS_TOKEN = 5735
+	CRIME_SUCCESS_ITEM = 5725
+	
+	@classmethod
+	def crime_success(cls):
+		return [
+			cls.CRIME_SUCCESS_ITEM, cls.CRIME_SUCCESS_MONEY,
+			cls.CRIME_SUCCESS_POINT, cls.CRIME_SUCCESS_TOKEN
+		]
 
 
 class LogCategories(IntEnum):
 	MONEY_INCOMING = 17
 	MONEY_OUTGOING = 14
-	CRIME = 136
+	CRIME = 136  # This pulls ~all~ crime included failures
 
 
 class TornClient(object):
@@ -61,14 +70,11 @@ class TornClient(object):
 		if not payload or not self.use_cache:
 			r = requests.get(url, params=query_params)
 			payload = r.json()
-			print(r.status_code)
-			print(r.url)
-			#print(payload)
 			
-			if "to" in query_params and query_params["to"] > int(datetime.now().replace(hour=0, minute=0, second=0).timestamp()):
+			if "to" in query_params and query_params["to"] > int(datetime.utcnow().replace(hour=0, minute=0, second=0).timestamp()):
 				timeout = 60 * 60
 			else:
-				timeout = 60 * 60 * 24 * 7
+				timeout = 0
 			
 			cache.set(cache_key, payload, timeout=timeout)
 
@@ -106,7 +112,7 @@ class TornClient(object):
 		payload = self.execute(
 			"user", "log",
 			**kwargs
-		)["log"]
+		).get("log")
 
 		if not payload:
 			return []
