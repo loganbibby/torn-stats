@@ -70,6 +70,8 @@ class TornClient(object):
 		if not payload or not self.use_cache:
 			r = requests.get(url, params=query_params)
 			payload = r.json()
+			print(r.status_code)
+			print(r.url)
 			
 			if "to" in query_params and query_params["to"] > int(datetime.utcnow().replace(hour=0, minute=0, second=0).timestamp()):
 				timeout = 60 * 60
@@ -137,7 +139,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given"]:
+			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received",]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
@@ -153,7 +155,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "cost", "total_cost", "upkeep_paid", "value", "bet"]:
+			for key in ["money", "money_mugged", "cost", "total_cost", "upkeep_paid", "value", "bet","worth",]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
