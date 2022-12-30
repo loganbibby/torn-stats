@@ -110,6 +110,8 @@ class TornClient(object):
 				kwargs["cat"] = ",".join([str(t.value) for t in log_category])
 			else:
 				kwargs["cat"] = int(log_category)
+		
+		print(kwargs)
 
 		payload = self.execute(
 			"user", "log",

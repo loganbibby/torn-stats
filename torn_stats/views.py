@@ -6,38 +6,46 @@ from .client import TornClient, LogTypes, LogCategories
 from .app import app, cache
 
 
+def compile_logs(client):
+	start_date = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0)
+	end_date = datetime.utcnow()
+	
+	request_counter = 0
+	logs = []
+	
+	while True:
+		ret_logs = client.get_logs(
+			log_type=[
+				LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, 
+				LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP
+			] + LogTypes.crime_success(),
+			start_date=start_date,
+			end_date=end_date
+		)
+		
+		request_counter += 1
+		logs += ret_logs  # Append to the main log list
+				
+		if len(ret_logs) == 100:  # max results
+			end_date = datetime.fromtimestamp(min([int(log["timestamp"]) for log in ret_logs])) - timedelta(seconds=1)
+			continue
+		
+		break
+		
+	print(f"Retreived {len(logs)} over {request_counter} requests")
+	return logs
+
+
 @app.route("/")
 def display_info():
 	start_date = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0)
-	end_date = datetime.utcnow().replace(hour=23, minute=59, second=59)
-
+	
 	profiles = []
 
 	for api_key in app.config["TORN_API_KEYS"]:
 		client = TornClient(api_key)
 
-		logs = []
-
-		date = start_date
-
-		while True:
-			if date > end_date:
-				 break
-			
-			end_date = date.replace(hour=23, minute=59, second=59)
-			
-			logs += client.get_logs(
-				log_type=[
-					LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, 
-					LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP
-				] + LogTypes.crime_success(),
-				start_date=date,
-				end_date=end_date
-			)
-			
-			# Advance day
-			date += timedelta(days=1)
-			
+		logs = compile_logs(client)
 
 		vault_logs = client.get_logs(
 			[LogTypes.VAULT_DEPOSIT, LogTypes.VAULT_WITHDRAWAL],
@@ -49,17 +57,6 @@ def display_info():
 				log_types = [log_types]
 
 			return [log for log in logs if log["log"] in log_types]
-		
-		def get_logs_by_detail(**kwargs):
-			log_subset = []
-			
-			for key, value in kwargs.items():
-				if not isinstance(value, list):
-					value = [value]
-				
-				log_subset += [log for log in logs if log[key].lower() in value]
-			
-			return log_subset
 		
 		profiles.append({
 			"player": client.get_basic_info(),
