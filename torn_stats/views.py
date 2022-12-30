@@ -66,7 +66,7 @@ def display_info():
 			"travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),
 			"travel_count": len(get_logs(LogTypes.TRAVEL.value)),
 			"money_in": client.get_money_received(start_date=start_date),
-			"money_out": client.get_money_spent(start_date=start_date),
+			"money_out": round(client.get_money_spent(start_date=start_date)),
 			"upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
 			"vault": sum([
 				sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
