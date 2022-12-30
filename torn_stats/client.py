@@ -141,7 +141,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received",]:
+			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received","won_amount"]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
@@ -157,7 +157,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "cost", "total_cost", "upkeep_paid", "value", "bet","worth",]:
+			for key in ["money", "money_mugged", "cost", "total_cost", "upkeep_paid", "value", "bet","worth","bet_amount","returned"]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
