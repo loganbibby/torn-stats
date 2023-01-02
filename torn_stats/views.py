@@ -70,6 +70,10 @@ def display_info():
 			"money_in": client.get_money_received(start_date=start_date),
 			"money_out": round(client.get_money_spent(start_date=start_date)),
 			"upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
+			"strength_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_STRENGTH.value)]),
+			"speed_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_SPEED.value)]),
+			"defense_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_DEFENSE.value)]),
+			"dexterity_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_DEXTERITY.value)]),
 			"vault": sum([
 				sum([l["data"]["deposited"] for l in vault_logs if "deposited" in l["data"] and l["data"]["property"] == 13]),
 				sum([l["data"]["withdrawn"] for l in vault_logs if "withdrawn" in l["data"] and l["data"]["property"] == 13]) * -1,

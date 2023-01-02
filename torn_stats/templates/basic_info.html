@@ -43,9 +43,21 @@
                             <div class="row mb-0">
                                 <div class="col-12">{{ "{:,}".format(profile["travel"]) }} mins</div>
                                 <div class="col-12">{{ profile["travel_count"] }} trips</div>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-2 border-bottom pb-2">
+                        <div class="col-1"><i class="fa-solid fa-dumbbell"></i></div>
+                        <div class="col-{{ left_col }} fw-bold">Gym Energy Used</div>
+                        <div class="col-{{ right_col }} text-end">
+                            <div class="row mb-0">
+                                <div class="col-12">Strength: {{ "{:,}".format(profile["strength_energy"]) }} </div>
+                                <div class="col-12">Speed: {{ profile["speed_energy"] }} </div>
+								<div class="col-12">Defense: {{ profile["defense_energy"] }} </div>
+								<div class="col-12">Dexterity: {{ profile["dexterity_energy"] }} </div>
                             </div>
                         </div>
-					</div>	
+					</div>
                     <div class="row mb-2 border-bottom pb-2">
                         <div class="col-1"><i class="fa-solid fa-money-bill-transfer"></i></div>
                         <div class="col-{{ left_col }} fw-bold">Money Movement</div>
