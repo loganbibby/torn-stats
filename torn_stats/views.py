@@ -17,7 +17,7 @@ def compile_logs(client):
 		ret_logs = client.get_logs(
 			log_type=[
 				LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, 
-				LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP
+				LogTypes.XANAX, LogTypes.MISSION, LogTypes.UPKEEP,
 			] + LogTypes.crime_success(),
 			start_date=start_date,
 			end_date=end_date
@@ -65,6 +65,7 @@ def display_info():
 			"missions": len(get_logs(LogTypes.MISSION.value)),
 			"travel": int(sum([l["data"]["duration"] for l in get_logs(LogTypes.TRAVEL.value)]) / 60),
 			"travel_count": len(get_logs(LogTypes.TRAVEL.value)),
+			"empty_blood_bag": len (get_logs(LogTypes.EMPTY_BLOOD_BAG.value)),
 			"money_in": client.get_money_received(start_date=start_date),
 			"money_out": round(client.get_money_spent(start_date=start_date)),
 			"upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),

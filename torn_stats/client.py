@@ -29,6 +29,7 @@ class LogTypes(IntEnum):
 	CRIME_SUCCESS_MONEY = 5720
 	CRIME_SUCCESS_TOKEN = 5735
 	CRIME_SUCCESS_ITEM = 5725
+	EMPTY_BLOOD_BAG = 2340
 	
 	@classmethod
 	def crime_success(cls):
@@ -141,7 +142,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received","won_amount"]:
+			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received","won_amount","money_gained"]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
@@ -171,6 +172,14 @@ class TornClient(object):
 		)
 
 		return sum([l["data"]["deposited"] for l in logs])
+
+	def get_blood(self, **kwargs):
+		logs = self.get_logs(
+			LogTypes.EMPTY_BLOOD_BAG,
+			**kwargs
+		)
+
+		return len([l["data"]["blood_bag"] for l in logs]) 
 
 	def get_vault_withdrawals(self, **kwargs):
 		logs = self.get_logs(
