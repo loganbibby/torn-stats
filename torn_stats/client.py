@@ -179,7 +179,7 @@ class TornClient(object):
 			**kwargs
 		)
 
-		return len([l["data"]["blood_bag"] for l in logs]) 
+		return len([l["data"]["faction"] for l in logs]) 
 
 	def get_vault_withdrawals(self, **kwargs):
 		logs = self.get_logs(
