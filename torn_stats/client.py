@@ -179,7 +179,7 @@ class TornClient(object):
 			**kwargs
 		)
 
-		return len([l["data"]["faction"] for l in logs]) 
+		return len([l["data"]["faction"] for l in logs if "faction" in l["data"] and l["data"]["faction"] != 0]) 
 
 	def get_vault_withdrawals(self, **kwargs):
 		logs = self.get_logs(
