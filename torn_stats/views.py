@@ -4,7 +4,7 @@ from time import time
 from flask import render_template, g
 from .client import TornClient, LogTypes, LogCategories
 from .app import app, cache
-
+from .config import 
 
 def compile_logs(client):
 	start_date = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0)
