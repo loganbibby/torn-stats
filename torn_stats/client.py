@@ -142,7 +142,7 @@ class TornClient(object):
 		money = 0
 
 		for log in logs:
-			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received","won_amount","money_gained"]:
+			for key in ["money", "money_mugged", "pay", "cost","total_cost","money_given","worth","received","won_amount","money_gained","amount","bounty_reward","total_value"]:
 				if key not in log["data"]:
 					continue
 				money += log["data"][key]
