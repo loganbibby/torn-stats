@@ -34,7 +34,31 @@ def compile_logs(client):
 		break
 		
 	print(f"Retreived {len(logs)} over {request_counter} requests")
+	
+	# Add another iteration of the loop to make a second request
+	while True:
+		# Make the second request
+		ret_logs = client.get_logs(
+			log_type=[
+				LogTypes.GYM_STRENGTH, LogTypes.GYM_SPEED, LogTypes.ATTACK_LEAVE
+				LogTypes.XANAX_OD, LogTypes.GYM_DEFENSE, LogTypes.GYM_DEXTERITY,
+				
+				],
+			start_date=start_date,
+			end_date=end_date
+		)
+		request_counter += 1
+		logs += ret_logs  # Append to the main log list
+				
+		if len(ret_logs) == 100:  # max results
+			end_date = datetime.fromtimestamp(min([int(log["timestamp"]) for log in ret_logs])) - timedelta(seconds=1)
+			continue
+		
+		break
+	
+	print(f"Retreived {len(logs)} over {request_counter} requests")
 	return logs
+
 
 
 @app.route("/")
@@ -69,6 +93,7 @@ def display_info():
 			"empty_blood_bag": client.get_blood(start_date=start_date),
 			"money_in": client.get_money_received(start_date=start_date),
 			"money_out": round(client.get_money_spent(start_date=start_date)),
+            #"attack_leave": len(["data"]["chain"]get_logs
 			"upkeep": sum([l["data"]["upkeep_paid"] for l in get_logs(LogTypes.UPKEEP.value)]),
 			"strength_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_STRENGTH.value)]),
 			"speed_energy": sum([l["data"]["energy_used"] for l in get_logs(LogTypes.GYM_SPEED.value)]),
