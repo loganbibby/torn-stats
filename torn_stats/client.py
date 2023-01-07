@@ -47,7 +47,7 @@ class LogCategories(IntEnum):
 
 class TornClient(object):
 	url = "https://api.torn.com"
-	use_cache = True
+	use_cache = False
 
 	def __init__(self, api_key):
 		self.api_key = api_key

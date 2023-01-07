@@ -17,7 +17,7 @@ def compile_logs(client):
 		ret_logs = client.get_logs(
 			log_type=[
 				LogTypes.TRAVEL, LogTypes.VAULT_WITHDRAWAL, LogTypes.VAULT_DEPOSIT, 
-				LogTypes.XANAX, LogTypes.UPKEEP, LogTypes.MISSION
+				LogTypes.XANAX, LogTypes.UPKEEP, LogTypes.GYM_STRENGTH,
 				
 			] + LogTypes.crime_success(),
 			start_date=start_date,
@@ -40,14 +40,14 @@ def compile_logs(client):
 		# Make the second request
 		ret_logs = client.get_logs(
 			log_type=[
-				LogTypes.GYM_STRENGTH, LogTypes.GYM_SPEED, LogTypes.ATTACK_LEAVE
+				LogTypes.MISSION, LogTypes.GYM_SPEED, LogTypes.ATTACK_LEAVE,
 				LogTypes.XANAX_OD, LogTypes.GYM_DEFENSE, LogTypes.GYM_DEXTERITY,
 				
 				],
 			start_date=start_date,
 			end_date=end_date
 		)
-		request_counter += 1
+		request_counter += 2
 		logs += ret_logs  # Append to the main log list
 				
 		if len(ret_logs) == 100:  # max results
